@@ -8,16 +8,8 @@ def rollDie(die):
     roll = random.randint(1, int(die))
     print(f"Rolled a {die}: {roll}")
 
-def MainView(window, character, stack):
+def MainView(window, character):
     palette = window.palette
-    d100 = window.dice_images["d100"]
-    d20 = window.dice_images["d20"]
-    d10 = window.dice_images["d10"]
-    d12 = window.dice_images["d12"]
-    d8 = window.dice_images["d8"]
-    d6 = window.dice_images["d6"]
-    d4 = window.dice_images["d4"]      
-
 
     mainFrame = Frame(window.root, bg=palette["background"])
     mainFrame.grid(row=0, column=0, sticky="nsew")
@@ -27,8 +19,8 @@ def MainView(window, character, stack):
     rightFrame = Frame(mainFrame, bg=palette["background"])
     rightFrame.grid(row=0, column=1, sticky="nsew")
     
-    while not stack.isEmpty():
-        section = stack.pop()
+    while not window.tableStack.isEmpty():
+        section = window.tableStack.pop()
         print(section)
         window.addSection(leftFrame, section)
     

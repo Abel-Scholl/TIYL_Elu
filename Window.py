@@ -4,6 +4,7 @@ from tkinter import ttk
 from PIL import Image, ImageTk
 import networkx as nx
 from data.TableManager import TableManager
+from Stack import Stack
 
 class Window:
     def __init__(self, title, width, height):
@@ -16,7 +17,7 @@ class Window:
         self.currentRow = 0
         self.currentColumn = 0
         self.tableManager = TableManager()
-
+        self.tableStack = Stack() ##stack of tables to be rolled on
 
         self.palette = {
             "background": "#757992", ##blue
@@ -127,22 +128,29 @@ class Window:
             entry = Entry(master, bg=self.palette["color6"], fg=self.palette["color5"], font=("Sitka Small", 12))
             entry.grid(row=1, column=0, sticky="ew")
         
-        elif title == "Race":
+        else:
             values = self.tableManager.getTableList(title)
+            supplementalFrame = Frame(master, bg=self.palette["color6"]) ##to hold supplemental tables
             combobox = ttk.Combobox(master, font=("Sitka Small", 12))
-            combobox.grid(row=0, column=0, sticky="ew")
-            combobox.bind("<<ComboboxSelected>>", lambda event: self.handleComboboxSelection(combobox, title))
+            combobox.bind("<<ComboboxSelected>>", lambda event: self.handleComboboxSelection(combobox, title, supplementalFrame))
             combobox.configure(values=values)
-            dieButton = Button(master, bg=self.palette["background"], image=self.dice_images["d20"], command=lambda: self.handleDiceRoll(combobox, title), borderwidth=0, highlightthickness=0)
+            dieButton = Button(master, bg=self.palette["background"], image=self.dice_images["d20"], command=lambda: self.handleDiceRoll(combobox, title, supplementalFrame), borderwidth=0, highlightthickness=0)            
+            combobox.grid(row=0, column=0, sticky="ew")
             dieButton.grid(row=0, column=1, sticky="e")
+            supplementalFrame.grid(row=1, column=0, columnspan=2, sticky="nsew")
+
             
-    def handleDiceRoll(self, combobox, table):
+    def handleDiceRoll(self, combobox, table, master):
         result = self.tableManager.rollOnTableByName(table)
         combobox.set(result)
-        self.handleComboboxSelection(combobox, table)
+        self.handleComboboxSelection(combobox, table, master)
         
-    def handleComboboxSelection(self, combobox, title):
-        print(combobox.get())
-        ##handle the next supplemental table
-    
+    def handleComboboxSelection(self, combobox, title, master):
+        value = combobox.get()
+        val = value.split(" ")[0] ##get the first word of the value (ignore parenthasees)
+        if value in self.tableManager.getAllTableNames():
+            self.removeWidgets(master)
+            self.addSection(master, value)
+        else:
+            print(f"No table found for {value}")
         

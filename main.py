@@ -8,8 +8,7 @@ from mainView import MainView
 def main():
     window = Window("TIYL_Elu", 800, 600)
     character = Character()
-    stack = Stack()
-    MainView(window, character, stack)
+    MainView(window, character)
     
     window.run()
 
