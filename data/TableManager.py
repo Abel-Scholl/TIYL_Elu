@@ -1,6 +1,6 @@
 from data.Table import Table
 from data.races import races
-#from data.classes import classes
+from data.classes import classes
 from data.Option import Option
 
 class TableManager:
@@ -8,6 +8,7 @@ class TableManager:
         self.tables = []
         
         self.initializeTable("Race")
+        self.initializeTable("Class")
         
 
     def addTable(self, table):
@@ -56,7 +57,9 @@ class TableManager:
                         return option
         return None
     
-    def initializeTable(self, tableType, name=None):
+    def initializeTable(self, tableType, name=None, parentType=None):
+        ##based on the tableType, create a table with the appropriate options. 
+        ##each option might have supplemental tables! This can help us handle that recursively.
         if name is None:
             name = tableType
         die = None
@@ -78,10 +81,39 @@ class TableManager:
                 for subtype in races[name]["subtypes"][0]:
                     option = Option(subtype, races[name]["subtypes"][0][subtype]["probability"])
                     options.append(option)
+                name = f"{name} Subtype"
                 
             case "Class":
                 die = "1d100"
                 options = []
+                probability = 1 / len(classes)
+                ##get the list of classes from the classes dictionary
+                for class_ in classes:
+                    option = Option(class_, probability)
+                    if classes[class_]["subclasses"]:
+                        subTable = self.initializeTable("Subclass", class_)
+                        option.addSuppTable(subTable)
+                    if classes[class_]["reasons"]:
+                        subTable = self.initializeTable("ClassReason", class_)
+                        option.addSuppTable(subTable)
+                    options.append(option)
+
+            case "Subclass":
+                die = "1d100"
+                probability = (1 / len(classes[name]["subclasses"]))
+                for subclass in classes[name]["subclasses"]:
+                    option = Option(subclass, probability)
+                    options.append(option)
+                name = classes[name]["subname"]
+                    
+            case "ClassReason":
+                die = "1d100"
+                probability = (1 / len(classes[name]["reasons"]))
+                for reason in classes[name]["reasons"]:
+                    option = Option(reason, probability)
+                    options.append(option)
+                name = f"{name} Class Reason"
+                
             case _:
                 return None
         

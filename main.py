@@ -6,7 +6,7 @@ from Stack import Stack
 from mainView import MainView
 
 def main():
-    window = Window("TIYL_Elu", 800, 600)
+    window = Window("TIYL_Elu", 1000, 600)
     character = Character()
     MainView(window, character)
     

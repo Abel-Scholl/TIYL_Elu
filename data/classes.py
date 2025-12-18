@@ -1,21 +1,19 @@
 classes = {
     "Artificer" : {
         "subname": "Specialization",
-        "options" : [
-            "subclasses" : [
-                "Alchemist",
-                "Armorer",
-                "Artillerist",
-                "Battlesmith"
-            ],
-            "reasons" : [
-                1,
-                2,
-                3,
-                4,
-                5,
-                6
-            ]
+        "subclasses" : [
+            "Alchemist",
+            "Armorer",
+            "Artillerist",
+            "Battlesmith"
+        ],
+        "reasons" : [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
         ]
     },
     "Bararian" : {
@@ -124,7 +122,7 @@ classes = {
 				"Circle of the Shepherd",
 				"Circle of Spores",
 				"Circle of the Stars",
-				"Circle ofWildfire"
+				"Circle of Wildfire"
         ],
         "reasons":[
 				"I saw too much devastation in the wild places, too much of nature's splendor ruined by the despoilers. I joined a circle of druids to fight back against the enemies of nature.",

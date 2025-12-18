@@ -167,12 +167,14 @@ class Window:
         
     def handleComboboxSelection(self, combobox, title, master):
         value = combobox.get()
+        self.removeWidgets(master) ##refresh the sections
+        master.grid_remove() ## Hide the frame entirely so it takes up no space
         
         option = self.tableManager.getTableOptionByName(value) ##grab the option object associated with the value from the current table
         if option is not None:
             tables = option.getSuppTables()
             if len(tables) > 0:
-                self.removeWidgets(master) ##refresh the sections
+                master.grid() ## Show the frame again since we have content
                 for table in tables:
                     self.addSection(master, table.getName(), table=table)
             else:
