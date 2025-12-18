@@ -1,11 +1,15 @@
 
 from Window import Window
+from Character import Character
+from data.TableManager import TableManager
+from Stack import Stack
 from mainView import MainView
 
 def main():
     window = Window("TIYL_Elu", 800, 600)
-    
-    MainView(window)
+    character = Character()
+    stack = Stack()
+    MainView(window, character, stack)
     
     window.run()
 
