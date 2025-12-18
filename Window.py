@@ -13,6 +13,19 @@ class Window:
         self.root.geometry(f"{width}x{height}")
         self.root.columnconfigure(0, weight=1)
         self.root.rowconfigure(0, weight=1)
+        
+        self.baseSectionHeadingFont = "Script MT Bold"
+        self.baseSectionHeadingFontSize = 28
+        self.baseSectionContentsFont = "Sitka Small"
+        self.baseSectionContentsFontSize = 12
+        
+        self.currentSectionHeadingFont = self.baseSectionHeadingFont
+        self.currentSectionHeadingFontSize = self.baseSectionHeadingFontSize
+        self.currentSectionContentsFont = self.baseSectionContentsFont
+        self.currentSectionContentsFontSize = self.baseSectionContentsFontSize
+        
+        self.currentSectionDepth = 1
+        
         self.currentWidgets = nx.DiGraph() ##directed graph structure of the current widgets
         self.currentRow = 0
         self.currentColumn = 0
@@ -89,14 +102,32 @@ class Window:
         else:
             self.root.destroy()
             
-    def addSection(self, master, title, currentRow=0, currentColumn=0):
+    def addSection(self, master, title, table=None, currentRow=0, currentColumn=0):
+        
+        if self.currentSectionDepth > 1:
+            if self.currentSectionHeadingFontSize > 10:
+                self.currentSectionHeadingFontSize = self.baseSectionHeadingFontSize - (self.currentSectionDepth*5)
+            else:
+                self.currentSectionHeadingFontSize = 10
+            
+            if self.currentSectionContentsFontSize > 2:
+                self.currentSectionContentsFontSize = self.baseSectionContentsFontSize - (self.currentSectionDepth*5)
+            else:
+                self.currentSectionContentsFontSize = 2
+        else:
+            self.currentSectionHeadingFont = self.baseSectionHeadingFont
+            self.currentSectionHeadingFontSize = self.baseSectionHeadingFontSize
+            self.currentSectionContentsFont = self.baseSectionContentsFont
+            self.currentSectionContentsFontSize = self.baseSectionContentsFontSize
+        
         ##adds a section to the provided frame
         mainFrame = Frame(master, bg=self.palette["background"])
-        mainFrame.pack(fill="both", expand=True)
+        padding = self.currentSectionDepth * 10
+        mainFrame.pack(fill="both", expand=True, padx=padding)
         
         headerFrame = Frame(mainFrame, bg=self.palette["background"])
         headerFrame.grid(row=0, column=0, sticky="nsew")
-        headerLabel = Label(headerFrame, text=title, font=("Script MT Bold", 28), fg=self.palette["heading"], bg=self.palette["background"]) #Script MT Bold, Goudy Old Style, Sitka Small
+        headerLabel = Label(headerFrame, text=title, font=(self.currentSectionHeadingFont, self.currentSectionHeadingFontSize), fg=self.palette["heading"], bg=self.palette["background"]) #Script MT Bold, Goudy Old Style, Sitka Small
         headerLabel.grid(row=1, column=0, sticky="w")
         
         contentsFrame = Frame(mainFrame, bg=self.palette["background"])
@@ -104,33 +135,22 @@ class Window:
         
         new_title = title.replace(" ", "_")
         
-        self.currentWidgets.add_nodes_from([
-            (f"{new_title}Frame", {"widget": mainFrame, "type": "frame", "currentRow": 1, "currentColumn": 0}),
-            (f"{new_title}HeaderFrame", {"widget": headerFrame, "type": "frame", "currentRow": 1, "currentColumn": 0}),
-            (f"{new_title}ContentsFrame", {"widget": contentsFrame, "type": "frame", "currentRow": 2, "currentColumn": 0}),
-        ])
-        
-        self.currentWidgets.add_edges_from([
-            ("root", f"{new_title}Frame"),
-            (f"{new_title}Frame", f"{new_title}HeaderFrame"),
-            (f"{new_title}Frame", f"{new_title}ContentsFrame"),
-        ])
-        
-        self.addSectionContents(contentsFrame, title)
+        self.addSectionContents(contentsFrame, title, table)
         
         
         return mainFrame
     
     
-    def addSectionContents(self, master, title, currentRow=0, currentColumn=0):
+    def addSectionContents(self, master, title, table=None, currentRow=0, currentColumn=0):
         
         if title == "Character Name":
             entry = Entry(master, bg=self.palette["color6"], fg=self.palette["color5"], font=("Sitka Small", 12))
             entry.grid(row=1, column=0, sticky="ew")
         
         else:
-            values = self.tableManager.getTableList(title)
-            supplementalFrame = Frame(master, bg=self.palette["color6"]) ##to hold supplemental tables
+            values = self.tableManager.getTableOptionsNames(title)
+            
+            supplementalFrame = Frame(master, bg=self.palette["background"]) ##to hold supplemental tables
             combobox = ttk.Combobox(master, font=("Sitka Small", 12))
             combobox.bind("<<ComboboxSelected>>", lambda event: self.handleComboboxSelection(combobox, title, supplementalFrame))
             combobox.configure(values=values)
@@ -147,10 +167,16 @@ class Window:
         
     def handleComboboxSelection(self, combobox, title, master):
         value = combobox.get()
-        val = value.split(" ")[0] ##get the first word of the value (ignore parenthasees)
-        if value in self.tableManager.getAllTableNames():
-            self.removeWidgets(master)
-            self.addSection(master, value)
+        
+        option = self.tableManager.getTableOptionByName(value) ##grab the option object associated with the value from the current table
+        if option is not None:
+            tables = option.getSuppTables()
+            if len(tables) > 0:
+                self.removeWidgets(master) ##refresh the sections
+                for table in tables:
+                    self.addSection(master, table.getName(), table=table)
+            else:
+                self.currentSectionDepth = 0 
         else:
             print(f"No table found for {value}")
         

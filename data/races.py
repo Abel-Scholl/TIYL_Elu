@@ -86,8 +86,7 @@ races = {
         },
     "Naeling (Tiefling)": {
         "probability":.04,
-        "subtypes": [{
-            
+        "subtypes": [{   
             "Baal (Asmodeus)": {"probability":.5},
             "Apollyon (Zariel)": {"probability":.20},
             "Malephar (Fierna)": {"probability":.20},

@@ -2,16 +2,12 @@ from abc import ABC, abstractmethod
 import random
 
 class Table(ABC):
-    def __init__(self):
-        self.name = ""
-        self.items = []
-        self.die = "" ##format: "1d6" number d number of sides (1-3 digits)
-        self.modifier = 0
-        self.options = []
-        self.parentTable = None
-        self.dependencies = [] ##tables that this table is dependent on
-        self.supplementals = [] ##tables that are supplemental to this table (to add more flavor)
-        ##when you add a supplemental table, it should push to the stack to be rolled on
+    def __init__(self, name="", die="1d100", modifier=0, options=[], parentTable=None):
+        self.name = name
+        self.die = die
+        self.modifier = modifier
+        self.options = options
+        self.parentTable = parentTable
     
     def addModifier(self, modifier):
         self.modifier = modifier
@@ -26,17 +22,13 @@ class Table(ABC):
     def handleRoll(self, roll):
         if self.options:
             cumulative = 0
-            for subtype in self.options:
-                cumulative += subtype["probability"] * 100
+            for option in self.options:
+                cumulative += option.getProbability() * 100
                 if roll < cumulative:
-                    return subtype["name"]
-            return self.options[-1]["name"]
+                    return option.getName()
+            return self.options[-1].getName()
         else:
             return None
-         
-    
-    def getItems(self):
-        return self.items
     
     def getName(self):
         return self.name
@@ -46,3 +38,6 @@ class Table(ABC):
     
     def getModifier(self):
         return self.modifier
+    
+    def addOptions(self, options):
+        pass

@@ -11,7 +11,7 @@ class Stack:
             #"Siblings", ## has supplemental tables
             
             #"Alignment", ##base
-            #"Class", ##base
+            "Class", ##base
         ]
         
         

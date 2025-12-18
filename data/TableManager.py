@@ -1,29 +1,14 @@
-import data.raceTables as raceTables
+from data.Table import Table
+from data.races import races
+#from data.classes import classes
+from data.Option import Option
 
 class TableManager:
     def __init__(self):
         self.tables = []
-        self.addTable(raceTables.RaceTable())
-        self.addTable(raceTables.HumanTable())
-        self.addTable(raceTables.DwarfTable())
-        self.addTable(raceTables.ElfTable())
-        self.addTable(raceTables.OrcTable())
-        self.addTable(raceTables.HalflingTable())
-        self.addTable(raceTables.GnomeTable())
-        self.addTable(raceTables.DraconidTable())
-        self.addTable(raceTables.HalfGiantTable())
-        self.addTable(raceTables.GoblinoidTable())
-        self.addTable(raceTables.CaznynTable())
-        self.addTable(raceTables.MinotaurTable())
-        self.addTable(raceTables.ThavlaniTable())
-        self.addTable(raceTables.UurdakhTable())
-        self.addTable(raceTables.XalnaarTable())
-        self.addTable(raceTables.AulaiTable())
-        self.addTable(raceTables.AutomatonTable())
-        self.addTable(raceTables.SkjaltTable())
-        self.addTable(raceTables.SkinchangerTable())
-        self.addTable(raceTables.VanaraiTable())
-        self.addTable(raceTables.DMChoiceTable())
+        
+        self.initializeTable("Race")
+        
 
     def addTable(self, table):
         self.tables.append(table)
@@ -45,9 +30,12 @@ class TableManager:
             return table.roll()
         return None
     
-    def getTableList(self, table):
+    def getTableOptionsNames(self, table):
         t = self.getTableByName(table)
-        result = t.getOptionsList()
+        result = []
+        if t is not None:
+            for option in t.options:
+                result.append(option.getName())
         return result
     
     def getAllTableNames(self):
@@ -55,4 +43,48 @@ class TableManager:
         for table in self.tables:
             result.append(table.name)
         return result
+    
+    def getTableOptionByName(self, name, table=None):
+        if table is not None:
+            for option in table.options:
+                if option.getName() == name:
+                    return option
+        else:
+            for t in self.tables:
+                for option in t.options:
+                    if option.getName() == name:
+                        return option
+        return None
+    
+    def initializeTable(self, tableType, name=None):
+        if name is None:
+            name = tableType
+        die = None
+        options = []
+        match tableType:
+            case "Race":
+                die = "1d100"
+                ##get the list of races from the races dictionary
+                for race in races:
+                    option = Option(race, races[race]["probability"])
+                    if races[race]["subtypes"]: ##If this has subtypes, a table needs to be created to roll for them
+                        subTable =self.initializeTable("RacialSubtype", race)
+                        ##add it to the option
+                        option.addSuppTable(subTable)
+                    options.append(option)
+            
+            case "RacialSubtype":
+                die = "1d100"
+                for subtype in races[name]["subtypes"][0]:
+                    option = Option(subtype, races[name]["subtypes"][0][subtype]["probability"])
+                    options.append(option)
+                
+            case "Class":
+                die = "1d100"
+                options = []
+            case _:
+                return None
         
+        table = Table(name=name, die=die, options=options)
+        self.addTable(table)
+        return table

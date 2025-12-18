@@ -1,16 +1,25 @@
-classes = [{
+classes = {
     "Artificer" : {
-        "subname": "Specialization"
-        "subclasses" : [
-            "Alchemist",
-            "Armorer",
-            "Artillerist",
-            "Battlesmith"
-        ],
-        "reasons" : [1,2,3,4,5,6],
+        "subname": "Specialization",
+        "options" : [
+            "subclasses" : [
+                "Alchemist",
+                "Armorer",
+                "Artillerist",
+                "Battlesmith"
+            ],
+            "reasons" : [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+            ]
+        ]
     },
     "Bararian" : {
-        "subname": "Specialization"
+        "subname": "Primal Path",
         "subclasses" : [
             "Ancestral Guardian",
             "Battlerager",
@@ -34,7 +43,7 @@ classes = [{
 			],
     },
     "Bard" : {
-        "subname": "College",
+        "subname": "Bardic College",
         "subclasses" : [
             "Creation",
 			"Eloquence",
@@ -74,7 +83,7 @@ classes = [{
 			]
     },
     "Cleric" : {
-        "subname": "Domain",
+        "subname": "Cleric Domain",
         "subclasses": [
             "Arcana",
             "Blood (ECG)",
@@ -105,7 +114,7 @@ classes = [{
 			]
     },
     "Druid" : {
-        "subname": "Circle",
+        "subname": "Druid Circle",
         "subclasses" : [
             "Blighted",
 				"Circle of Dreams",
@@ -315,4 +324,4 @@ classes = [{
             "I was a prodigy who demonstrated mastery of the arcane arts at an early age. When I became old enough to set out on my own, I did so to learn more magic and expand my power."
 		]
     }
-}]
+}
