@@ -16,7 +16,7 @@ classes = {
             6
         ]
     },
-    "Bararian" : {
+    "Barbarian" : {
         "subname": "Primal Path",
         "subclasses" : [
             "Ancestral Guardian",
@@ -80,6 +80,23 @@ classes = {
 				"6"
 			]
     },
+    "Blood Hunter" : {
+            "subname": "Choose an Order",
+            "subclasses": [
+                "Ghostslayer",
+                "Lycan",
+                "Mutant",
+                "Profane Soul"
+            ],
+            "reasons":[
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6"
+            ]
+        },
     "Cleric" : {
         "subname": "Cleric Domain",
         "subclasses": [
@@ -205,7 +222,7 @@ classes = {
 			]
     },
     "Ranger" : {
-        "subname": "Ranger Archetype",
+        "subname": "Ranger Conclave",
         "subclasses" : [
             "Beast Master",
             "Drakewarden",
@@ -227,7 +244,7 @@ classes = {
         ]
     },
     "Rogue" : {
-        "subname": "Background",
+        "subname": "Roguish Archetype",
         "subclasses" : [
             "Arcane Tricker",
             "Assassin",

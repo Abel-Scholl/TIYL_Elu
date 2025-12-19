@@ -4,6 +4,7 @@ from tkinter import ttk
 from PIL import Image, ImageTk
 import networkx as nx
 from data.TableManager import TableManager
+from Character import Character
 from Stack import Stack
 
 class Window:
@@ -26,11 +27,12 @@ class Window:
         
         self.currentSectionDepth = 1
         
-        self.currentWidgets = nx.DiGraph() ##directed graph structure of the current widgets
+        self.currentWidgets = {}
         self.currentRow = 0
         self.currentColumn = 0
         self.tableManager = TableManager()
-        self.tableStack = Stack() ##stack of tables to be rolled on
+        self.character = Character()
+        self.tableStack = Stack()
 
         self.palette = {
             "background": "#757992", ##blue
@@ -56,10 +58,106 @@ class Window:
         for key, value in self.dice_images.items():
             self.dice_images[key] = ImageTk.PhotoImage(value)
         
-        self.currentWidgets.add_nodes_from([    
-            ("root", {"widget": self.root, "type": "window"})
-        ])
+        self.initializeMainFrames()
         
+    def initializeMainFrames(self):
+        mainFrame = Frame(self.root, bg=self.palette["background"])
+        mainFrame.grid(row=0, column=0, sticky="nsew")
+        
+        # Left side with scrollbar
+        leftCanvas = Canvas(mainFrame, bg=self.palette["background"], highlightthickness=0)
+        leftScrollbar = Scrollbar(mainFrame, orient="vertical", command=leftCanvas.yview)
+        leftFrame = Frame(leftCanvas, bg=self.palette["background"])
+        
+        leftCanvas.pack(side="left", fill="both", expand=True)
+        leftScrollbar.pack(side="left", fill="y")
+        
+        leftCanvas.create_window((0, 0), window=leftFrame, anchor="nw")
+        leftCanvas.configure(yscrollcommand=leftScrollbar.set)
+        
+        def configure_left_scroll(event):
+            # Update scroll region and canvas width
+            leftCanvas.configure(scrollregion=leftCanvas.bbox("all"))
+            canvas_width = event.width
+            canvas_items = leftCanvas.find_all()
+            if canvas_items:
+                leftCanvas.itemconfig(canvas_items[0], width=canvas_width)
+        
+        leftFrame.bind("<Configure>", configure_left_scroll)
+        
+        def on_left_canvas_configure(event):
+            canvas_width = event.width
+            canvas_items = leftCanvas.find_all()
+            if canvas_items:
+                leftCanvas.itemconfig(canvas_items[0], width=canvas_width)
+        
+        leftCanvas.bind("<Configure>", on_left_canvas_configure)
+        
+        # Right side with scrollbar
+        rightCanvas = Canvas(mainFrame, bg=self.palette["background"], highlightthickness=0)
+        rightScrollbar = Scrollbar(mainFrame, orient="vertical", command=rightCanvas.yview)
+        rightFrame = Frame(rightCanvas, bg=self.palette["background"])
+        
+        rightScrollbar.pack(side="right", fill="y")
+        rightCanvas.pack(side="right", fill="both", expand=True)
+        
+        rightCanvas.create_window((0, 0), window=rightFrame, anchor="nw")
+        rightCanvas.configure(yscrollcommand=rightScrollbar.set)
+        
+        def configure_right_scroll(event):
+            # Update scroll region and canvas width
+            rightCanvas.configure(scrollregion=rightCanvas.bbox("all"))
+            canvas_width = event.width
+            canvas_items = rightCanvas.find_all()
+            if canvas_items:
+                rightCanvas.itemconfig(canvas_items[0], width=canvas_width)
+        
+        rightFrame.bind("<Configure>", configure_right_scroll)
+        
+        def on_right_canvas_configure(event):
+            canvas_width = event.width
+            canvas_items = rightCanvas.find_all()
+            if canvas_items:
+                rightCanvas.itemconfig(canvas_items[0], width=canvas_width)
+        
+        rightCanvas.bind("<Configure>", on_right_canvas_configure)
+        
+        # Enable mousewheel scrolling (reversed direction)
+        def _on_mousewheel_left(event):
+            # Reverse direction: multiply by -1 to flip scroll direction
+            scroll_amount = int(event.delta)
+            leftCanvas.yview_scroll(scroll_amount, "units")
+        
+        def _on_mousewheel_right(event):
+            # Reverse direction: multiply by -1 to flip scroll direction
+            scroll_amount = int(event.delta)*-1
+            rightCanvas.yview_scroll(scroll_amount, "units")
+        
+        leftCanvas.bind("<MouseWheel>", _on_mousewheel_left)
+        rightCanvas.bind("<MouseWheel>", _on_mousewheel_right)
+        
+        # Also bind to the frames inside the canvas
+        leftFrame.bind("<MouseWheel>", _on_mousewheel_left)
+        rightFrame.bind("<MouseWheel>", _on_mousewheel_right)
+        
+        widgets = {
+            "mainFrame": mainFrame,
+            "leftCanvas": leftCanvas,
+            "leftFrame": leftFrame,
+            "leftScrollbar": leftScrollbar,
+            "rightCanvas": rightCanvas,
+            "rightFrame": rightFrame,
+            "rightScrollbar": rightScrollbar
+        }
+        self.currentWidgets.update(widgets)
+        
+        self.refreshCharacterSheet()
+        
+        while not self.tableStack.isEmpty():
+            section = self.tableStack.pop()
+            print(section)
+            self.addSection(leftFrame, section)
+    
     
     def run(self):
         self.root.mainloop()
@@ -102,6 +200,17 @@ class Window:
         else:
             self.root.destroy()
             
+    def refreshCharacterSheet(self):
+        master = self.currentWidgets["rightFrame"]
+        self.removeWidgets(master)
+        traits = self.character.getAll()
+        i=0
+        for trait, value in traits.items():
+            label = Label(master, text=f"{trait}: {value}", font=("Sitka Small", 12), bg=self.palette["background"], fg=self.palette["color6"])
+            label.grid(row=i, column=0, sticky="w")
+            self.currentWidgets.update({f"{trait}": label})
+            i+=1
+    
     def addSection(self, master, title, table=None, currentRow=0, currentColumn=0):
         
         if self.currentSectionDepth > 1:
@@ -139,7 +248,7 @@ class Window:
         
         
         return mainFrame
-    
+            
     
     def addSectionContents(self, master, title, table=None, currentRow=0, currentColumn=0):
         
@@ -167,18 +276,19 @@ class Window:
         
     def handleComboboxSelection(self, combobox, title, master):
         value = combobox.get()
-        self.removeWidgets(master) ##refresh the sections
-        master.grid_remove() ## Hide the frame entirely so it takes up no space
-        
         option = self.tableManager.getTableOptionByName(value) ##grab the option object associated with the value from the current table
         if option is not None:
+            
+            self.character.set(option.getParentTable(), value)
+            self.refreshCharacterSheet()
+            self.removeWidgets(master) ##refresh the sections
+            master.grid_remove() ## Hide the frame entirely so it takes up no space
+            
             tables = option.getSuppTables()
             if len(tables) > 0:
                 master.grid() ## Show the frame again since we have content
                 for table in tables:
                     self.addSection(master, table.getName(), table=table)
             else:
-                self.currentSectionDepth = 0 
-        else:
-            print(f"No table found for {value}")
+                print(f"No table found for {value}")
         

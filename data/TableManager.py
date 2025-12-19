@@ -69,17 +69,17 @@ class TableManager:
                 die = "1d100"
                 ##get the list of races from the races dictionary
                 for race in races:
-                    option = Option(race, races[race]["probability"])
+                    option = Option(race, tableType, races[race]["probability"])
                     if races[race]["subtypes"]: ##If this has subtypes, a table needs to be created to roll for them
-                        subTable =self.initializeTable("RacialSubtype", race)
+                        subTable =self.initializeTable("Racial Subtype", race)
                         ##add it to the option
                         option.addSuppTable(subTable)
                     options.append(option)
             
-            case "RacialSubtype":
+            case "Racial Subtype":
                 die = "1d100"
                 for subtype in races[name]["subtypes"][0]:
-                    option = Option(subtype, races[name]["subtypes"][0][subtype]["probability"])
+                    option = Option(subtype, tableType, races[name]["subtypes"][0][subtype]["probability"])
                     options.append(option)
                 name = f"{name} Subtype"
                 
@@ -89,28 +89,28 @@ class TableManager:
                 probability = 1 / len(classes)
                 ##get the list of classes from the classes dictionary
                 for class_ in classes:
-                    option = Option(class_, probability)
+                    option = Option(class_, tableType, probability)
                     if classes[class_]["subclasses"]:
                         subTable = self.initializeTable("Subclass", class_)
                         option.addSuppTable(subTable)
-                    if classes[class_]["reasons"]:
-                        subTable = self.initializeTable("ClassReason", class_)
-                        option.addSuppTable(subTable)
+                    #if classes[class_]["reasons"]:
+                    #    subTable = self.initializeTable("Class Reason", class_)
+                    #    option.addSuppTable(subTable)
                     options.append(option)
 
             case "Subclass":
                 die = "1d100"
                 probability = (1 / len(classes[name]["subclasses"]))
                 for subclass in classes[name]["subclasses"]:
-                    option = Option(subclass, probability)
+                    option = Option(subclass, tableType, probability)
                     options.append(option)
                 name = classes[name]["subname"]
                     
-            case "ClassReason":
+            case "Class Reason":
                 die = "1d100"
                 probability = (1 / len(classes[name]["reasons"]))
                 for reason in classes[name]["reasons"]:
-                    option = Option(reason, probability)
+                    option = Option(reason, tableType, probability)
                     options.append(option)
                 name = f"{name} Class Reason"
                 

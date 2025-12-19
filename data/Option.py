@@ -1,7 +1,8 @@
 class Option:
-    def __init__(self, name, probability=None):
+    def __init__(self, name, parentTable, probability=None):
         self.name = name
         self.probability = probability
+        self.parentTable = parentTable
         self.suppTables = []
     
     def getName(self):
@@ -12,6 +13,9 @@ class Option:
     
     def setProbability(self, probability):
         self.probability = probability
+        
+    def getParentTable(self):
+        return self.parentTable
     
     def getSuppTables(self):
         return self.suppTables
