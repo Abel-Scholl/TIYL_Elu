@@ -97,8 +97,8 @@ class Window:
             # Add the container to the notebook (not the canvas directly)
             notebook.add(tabContainer, text = tab)
             
-            while not self.tableStack.isEmpty():
-                section = self.tableStack.pop()
+            ##add the appropriate tables to the tab frame
+            for section in sections[tab]:
                 print(section)
                 self.addSection(frame, section)
             
@@ -245,8 +245,12 @@ class Window:
         if title == "Character Name":
             entry = Entry(master, bg=self.palette["color6"], fg=self.palette["color5"], font=("Sitka Small", 12))
             entry.grid(row=1, column=0, sticky="ew")
-        
+            entry.bind("<KeyRelease>", lambda event: self.handleEntry(entry, title, master))
         else:
+            table = self.tableManager.getTableByName(title) ##get the table object associated with the title
+            if table is None:
+                return
+            
             values = self.tableManager.getTableOptionsNames(title)
             
             supplementalFrame = Frame(master, bg=self.palette["background"]) ##to hold supplemental tables
@@ -254,6 +258,7 @@ class Window:
             combobox.bind("<<ComboboxSelected>>", lambda event: self.handleComboboxSelection(combobox, title, supplementalFrame))
             combobox.configure(values=values)
             dieButton = Button(master, bg=self.palette["background"], image=self.dice_images["d20"], command=lambda: self.handleDiceRoll(combobox, title, supplementalFrame), borderwidth=0, highlightthickness=0)            
+            combobox.bind("<KeyRelease>", lambda event: self.handleComboboxSelection(combobox, title, supplementalFrame))
             combobox.grid(row=0, column=0, sticky="ew")
             dieButton.grid(row=0, column=1, sticky="e")
             supplementalFrame.grid(row=1, column=0, columnspan=2, sticky="nsew")
@@ -265,7 +270,11 @@ class Window:
         self.handleComboboxSelection(combobox, table, master)
         
     def handleComboboxSelection(self, combobox, title, master):
-        value = combobox.get()
+        val = combobox.get()
+        first = val[0].upper()
+        value = first + val[1:]
+        self.character.set(title, value)
+        self.refreshCharacterSheet()
         option = self.tableManager.getTableOptionByName(value) ##grab the option object associated with the value from the current table
         if option is not None:
             
@@ -282,7 +291,13 @@ class Window:
             else:
                 print(f"No table found for {value}")
 
-
+    def handleEntry(self, entry, title, master):
+        ##every time the entry is changed, update the character sheet
+        value = entry.get()
+        self.character.set(title, value)
+        self.refreshCharacterSheet()
+    
+    
     def style_notebook(self):
         # Use a theme that supports custom tab backgrounds (works better on Windows)
         # Try 'clam' or 'alt' theme which support background colors
