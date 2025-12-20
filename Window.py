@@ -6,7 +6,8 @@ import networkx as nx
 from data.TableManager import TableManager
 from Character import Character
 from Stack import Stack
-from config import palette
+from config import palette, sections
+from ScrollEvents import configure_scroll, on_canvas_configure, _on_mousewheel
 
 class Window:
     def __init__(self, title, width, height):
@@ -56,6 +57,53 @@ class Window:
         
         self.initializeMainFrames()
         
+    def initializeNotebookWindows(self):
+        leftFrame = self.currentWidgets["leftFrame"]
+        notebook = ttk.Notebook(leftFrame)
+        self.currentWidgets.update({"notebook": notebook})
+        
+        tabs = sections.keys()
+        for tab in tabs:
+            # Create a container frame for the tab that will hold canvas and scrollbar
+            tabContainer = Frame(notebook, bg=self.palette["background"])
+            
+            # Create canvas and scrollbar inside the container
+            canvas = Canvas(tabContainer, bg=self.palette["background"], highlightthickness=0)
+            scrollbar = Scrollbar(tabContainer, orient="vertical", command=canvas.yview)
+            frame = Frame(canvas, bg = self.palette["background"])
+            
+            # Pack canvas first (scrollbar will be shown/hidden dynamically on the right)
+            canvas.pack(side="left", fill="both", expand=True)
+            
+            # Configure canvas with the scrollable frame
+            canvas.create_window((0, 0), window=frame, anchor="nw")
+            # Initially disable scrollbar (will be enabled if content exceeds canvas)
+            canvas.configure(yscrollcommand=lambda *args: None)
+            
+            # Bind scroll events (pass scrollbar so it can be shown/hidden)
+            frame.bind("<Configure>", lambda event, c=canvas, s=scrollbar: configure_scroll(event, c, s))
+            canvas.bind("<Configure>", lambda event, c=canvas, s=scrollbar: on_canvas_configure(event, c, s))
+            canvas.bind("<MouseWheel>", lambda event, c=canvas: _on_mousewheel(event, c))
+            frame.bind("<MouseWheel>", lambda event, c=canvas: _on_mousewheel(event, c))
+            
+            widgets = {
+                f"{tab}Canvas": canvas,
+                f"{tab}Scrollbar": scrollbar,
+                f"{tab}Frame": frame,
+                f"{tab}Container": tabContainer
+            }
+            self.currentWidgets.update(widgets)
+            
+            # Add the container to the notebook (not the canvas directly)
+            notebook.add(tabContainer, text = tab)
+            
+            while not self.tableStack.isEmpty():
+                section = self.tableStack.pop()
+                print(section)
+                self.addSection(frame, section)
+            
+        notebook.pack(fill="both", expand=True, padx=5, pady=5)
+    
     def initializeMainFrames(self):
         widgets = {}
         
@@ -71,78 +119,31 @@ class Window:
         rightScrollbar = Scrollbar(mainFrame, orient="vertical", command=rightCanvas.yview)
         rightFrame = Frame(rightCanvas, bg=self.palette["color4"])
         
-        rightScrollbar.pack(side="right", fill="y")
-        rightCanvas.pack(side="right", fill="both", expand=True)
+        # Pack canvas first (scrollbar will be packed on the right when needed)
+        rightCanvas.pack(side="left", fill="both", expand=True)
         
         rightCanvas.create_window((0, 0), window=rightFrame, anchor="nw")
-        rightCanvas.configure(yscrollcommand=rightScrollbar.set)
+        # Initially disable scrollbar (will be enabled if content exceeds canvas)
+        rightCanvas.configure(yscrollcommand=lambda *args: None)
         
-        def configure_right_scroll(event):
-            # Update scroll region and canvas width
-            rightCanvas.configure(scrollregion=rightCanvas.bbox("all"))
-            canvas_width = event.width
-            canvas_items = rightCanvas.find_all()
-            if canvas_items:
-                rightCanvas.itemconfig(canvas_items[0], width=canvas_width)
+        rightFrame.bind("<Configure>", lambda event: configure_scroll(event, rightCanvas, rightScrollbar))
+        rightCanvas.bind("<Configure>", lambda event: on_canvas_configure(event, rightCanvas, rightScrollbar))
         
-        rightFrame.bind("<Configure>", configure_right_scroll)
+        ##bind the mousewheel to the right canvas and the right frame
+        rightCanvas.bind("<MouseWheel>", lambda event: _on_mousewheel(event, rightCanvas))
+        rightFrame.bind("<MouseWheel>", lambda event: _on_mousewheel(event, rightCanvas))
         
-        def on_right_canvas_configure(event):
-            canvas_width = event.width
-            canvas_items = rightCanvas.find_all()
-            if canvas_items:
-                rightCanvas.itemconfig(canvas_items[0], width=canvas_width)
-        
-        rightCanvas.bind("<Configure>", on_right_canvas_configure)
-        
-        # Enable mousewheel scrolling (reversed direction)
-        def _on_mousewheel_left(event):
-            # Reverse direction: multiply by -1 to flip scroll direction
-            scroll_amount = int(event.delta)
-            leftCanvas.yview_scroll(scroll_amount, "units")
-        
-        def _on_mousewheel_right(event):
-            # Reverse direction: multiply by -1 to flip scroll direction
-            scroll_amount = int(event.delta)*-1
-            rightCanvas.yview_scroll(scroll_amount, "units")
-        
-        #leftCanvas.bind("<MouseWheel>", _on_mousewheel_left)
-        rightCanvas.bind("<MouseWheel>", _on_mousewheel_right)
-        
-        # Also bind to the frames inside the canvas
-        leftFrame.bind("<MouseWheel>", _on_mousewheel_left)
-        rightFrame.bind("<MouseWheel>", _on_mousewheel_right)
-        
+        ##add the widgets to the current widgets dictionary
         widgets = {
             "mainFrame": mainFrame,
-            #"leftCanvas": leftCanvas,
             "leftFrame": leftFrame,
-            #"leftScrollbar": leftScrollbar,
-            #"rightCanvas": rightCanvas,
+            "rightCanvas": rightCanvas,
             "rightFrame": rightFrame,
             "rightScrollbar": rightScrollbar
         }
         self.currentWidgets.update(widgets)
         
-        notebook = ttk.Notebook(leftFrame)
-        self.currentWidgets.update({"notebook": notebook})
-        
-        
-        tabs = ["Base", "Origins", "Relationships", "Personal Decisions", "Life Events", "Supplemental"]
-        for tab in tabs:
-            frame = Frame(notebook, bg = self.palette["background"])
-            frame.pack(fill= "both", expand=True)
-            notebook.insert("end", frame)
-            notebook.add(frame, text = tab)
-            self.currentWidgets.update(
-                {f"{tab}Frame": frame})
-            
-            while not self.tableStack.isEmpty():
-                section = self.tableStack.pop()
-                print(section)
-                self.addSection(frame, section)
-            
-        notebook.pack(fill="both", expand=True, padx=5, pady=5)
+        self.initializeNotebookWindows()
         
         
         self.refreshCharacterSheet()
