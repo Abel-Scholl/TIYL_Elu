@@ -94,26 +94,36 @@ def MainView(window):
     
     
         
-    Base = ["Character Name", "Race", "Background", "Class", "Level"]
+    Base = ["Character Name", "Level", "Race", "Background", "Class"]
     Origins = ["Parents", "Birthplace", "Siblings", "Family", "Absent Parent", "Childhood Home", "Childhood Memories"]
+    Bonds = [] ##This is where people close to you will go. If you have family/siblings, the tables to roll on for them will show up here.
     PersonalDecisions = ["Background", "Class"]
-    LifeEvents = ["Life Events", "Life Events", "Life Events"]
-    Supplemental = ["Alignment"]
+    LifeEvents = ["Life Events"]
+    Supplemental = []
     
     sections = [Origins, PersonalDecisions, LifeEvents, Supplemental]
         
-        
+    # Style the notebook tabs
+    style = ttk.Style()
+    style.configure("TNotebook.Tab", 
+                    background=palette["color3"],
+                    foreground=palette["color6"],
+                    padding=[10, 5])
+    style.map("TNotebook.Tab",
+              background=[("selected", palette["background"])],
+              foreground=[("selected", palette["color6"])])
+    
     notebook = ttk.Notebook(rightFrame)
-    tabs = ["Origins", "Personal Decisions", "Life Events", "Supplemental"]
+    tabs = ["Base", "Origins", "Relationships", "Personal Decisions", "Life Events", "Supplemental"]
     for tab in tabs:
-        frame = ttk.Frame(notebook)
+        frame = ttk.Frame(notebook, bg=palette["color3"])
         label = ttk.Label(frame, text = tab)
         label.pack(pady = 50, padx = 20)
         frame.pack(fill= "both", expand=True)
         notebook.insert("end", frame, text = tab)
         notebook.add(frame, text = tab)
     
-    #notebook.pack(fill="both", expand=True, padx=5, pady=5)
+    notebook.pack(fill="both", expand=True, padx=5, pady=5)
     
     
     doc = pymupdf.open("./assets/CharacterSheet1.pdf")

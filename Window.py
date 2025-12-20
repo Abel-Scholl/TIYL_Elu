@@ -6,6 +6,7 @@ import networkx as nx
 from data.TableManager import TableManager
 from Character import Character
 from Stack import Stack
+from config import palette
 
 class Window:
     def __init__(self, title, width, height):
@@ -34,14 +35,9 @@ class Window:
         self.character = Character()
         self.tableStack = Stack()
 
-        self.palette = {
-            "background": "#757992", ##blue
-            "heading": "#EE881A", ##orange/gold
-            "color3": "#A41917", ##red
-            "color4": "#819564", ##tan/green
-            "color5": "#030F15", ##black
-            "color6": "#F1DBB5" ##cream
-        }
+        self.palette = palette
+        self.style = ttk.Style()
+        self.style_notebook()
         
         dice_image = Image.open("./assets/dice.png")
         dice_image = dice_image.resize((dice_image.width // 4, dice_image.height // 4))
@@ -61,42 +57,19 @@ class Window:
         self.initializeMainFrames()
         
     def initializeMainFrames(self):
+        widgets = {}
+        
         mainFrame = Frame(self.root, bg=self.palette["background"])
         mainFrame.grid(row=0, column=0, sticky="nsew")
         
-        # Left side with scrollbar
-        leftCanvas = Canvas(mainFrame, bg=self.palette["background"], highlightthickness=0)
-        leftScrollbar = Scrollbar(mainFrame, orient="vertical", command=leftCanvas.yview)
-        leftFrame = Frame(leftCanvas, bg=self.palette["background"])
-        
-        leftCanvas.pack(side="left", fill="both", expand=True)
-        leftScrollbar.pack(side="left", fill="y")
-        
-        leftCanvas.create_window((0, 0), window=leftFrame, anchor="nw")
-        leftCanvas.configure(yscrollcommand=leftScrollbar.set)
-        
-        def configure_left_scroll(event):
-            # Update scroll region and canvas width
-            leftCanvas.configure(scrollregion=leftCanvas.bbox("all"))
-            canvas_width = event.width
-            canvas_items = leftCanvas.find_all()
-            if canvas_items:
-                leftCanvas.itemconfig(canvas_items[0], width=canvas_width)
-        
-        leftFrame.bind("<Configure>", configure_left_scroll)
-        
-        def on_left_canvas_configure(event):
-            canvas_width = event.width
-            canvas_items = leftCanvas.find_all()
-            if canvas_items:
-                leftCanvas.itemconfig(canvas_items[0], width=canvas_width)
-        
-        leftCanvas.bind("<Configure>", on_left_canvas_configure)
+        leftFrame = Frame(mainFrame, bg=self.palette["color4"])
+        leftFrame.pack(side="left", fill="both", expand=True)
+
         
         # Right side with scrollbar
-        rightCanvas = Canvas(mainFrame, bg=self.palette["background"], highlightthickness=0)
+        rightCanvas = Canvas(mainFrame, bg=self.palette["color4"], highlightthickness=0)
         rightScrollbar = Scrollbar(mainFrame, orient="vertical", command=rightCanvas.yview)
-        rightFrame = Frame(rightCanvas, bg=self.palette["background"])
+        rightFrame = Frame(rightCanvas, bg=self.palette["color4"])
         
         rightScrollbar.pack(side="right", fill="y")
         rightCanvas.pack(side="right", fill="both", expand=True)
@@ -133,7 +106,7 @@ class Window:
             scroll_amount = int(event.delta)*-1
             rightCanvas.yview_scroll(scroll_amount, "units")
         
-        leftCanvas.bind("<MouseWheel>", _on_mousewheel_left)
+        #leftCanvas.bind("<MouseWheel>", _on_mousewheel_left)
         rightCanvas.bind("<MouseWheel>", _on_mousewheel_right)
         
         # Also bind to the frames inside the canvas
@@ -142,21 +115,37 @@ class Window:
         
         widgets = {
             "mainFrame": mainFrame,
-            "leftCanvas": leftCanvas,
+            #"leftCanvas": leftCanvas,
             "leftFrame": leftFrame,
-            "leftScrollbar": leftScrollbar,
-            "rightCanvas": rightCanvas,
+            #"leftScrollbar": leftScrollbar,
+            #"rightCanvas": rightCanvas,
             "rightFrame": rightFrame,
             "rightScrollbar": rightScrollbar
         }
         self.currentWidgets.update(widgets)
         
-        self.refreshCharacterSheet()
+        notebook = ttk.Notebook(leftFrame)
+        self.currentWidgets.update({"notebook": notebook})
         
-        while not self.tableStack.isEmpty():
-            section = self.tableStack.pop()
-            print(section)
-            self.addSection(leftFrame, section)
+        
+        tabs = ["Base", "Origins", "Relationships", "Personal Decisions", "Life Events", "Supplemental"]
+        for tab in tabs:
+            frame = Frame(notebook, bg = self.palette["background"])
+            frame.pack(fill= "both", expand=True)
+            notebook.insert("end", frame)
+            notebook.add(frame, text = tab)
+            self.currentWidgets.update(
+                {f"{tab}Frame": frame})
+            
+            while not self.tableStack.isEmpty():
+                section = self.tableStack.pop()
+                print(section)
+                self.addSection(frame, section)
+            
+        notebook.pack(fill="both", expand=True, padx=5, pady=5)
+        
+        
+        self.refreshCharacterSheet()
     
     
     def run(self):
@@ -206,7 +195,7 @@ class Window:
         traits = self.character.getAll()
         i=0
         for trait, value in traits.items():
-            label = Label(master, text=f"{trait}: {value}", font=("Sitka Small", 12), bg=self.palette["background"], fg=self.palette["color6"])
+            label = Label(master, text=f"{trait}: {value}", font=("Sitka Small", 16), bg=self.palette["color4"], fg=self.palette["color5"])
             label.grid(row=i, column=0, sticky="w")
             self.currentWidgets.update({f"{trait}": label})
             i+=1
@@ -291,4 +280,42 @@ class Window:
                     self.addSection(master, table.getName(), table=table)
             else:
                 print(f"No table found for {value}")
+
+
+    def style_notebook(self):
+        # Use a theme that supports custom tab backgrounds (works better on Windows)
+        # Try 'clam' or 'alt' theme which support background colors
+        try:
+            self.style.theme_use('clam')
+        except:
+            try:
+                self.style.theme_use('alt')
+            except:
+                pass  # Use default theme if others aren't available
+
+        # Style the tab bar (the area behind the tabs)
+        self.style.configure("TNotebook",
+                    background=palette["color4"],
+                    borderwidth=0,
+                    bordercolor=palette["color5"])
+
+        # Style the individual tabs
+        self.style.configure("TNotebook.Tab", 
+                    background=palette["color3"],
+                    foreground=palette["color7"],
+                    padding=[10, 5],
+                    borderwidth=2,
+                    bordercolor=palette["color5"],
+                    relief="solid",
+                    lightcolor=palette["color5"],
+                    darkcolor=palette["color5"])
+
+        self.style.map("TNotebook.Tab",
+                background=[("selected", palette["background"]), ("!selected", palette["color3"])],
+                foreground=[("selected", palette["color6"]), ("!selected", palette["color7"])],
+                bordercolor=[("selected", palette["color5"]), ("!selected", palette["color5"])],
+                lightcolor=[("selected", palette["color5"]), ("!selected", palette["color5"])],
+                darkcolor=[("selected", palette["color5"]), ("!selected", palette["color5"])],
+                borderwidth=[("selected", 2), ("!selected", 2)],
+                expand=[("selected", [1, 1, 1, 0])]) #[top, right, bottom, left]
         
