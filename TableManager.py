@@ -1,7 +1,7 @@
-from data.Table import Table
+from objects.Table import Table
 from data.races import races
 from data.classes import classes
-from data.Option import Option
+from objects.Option import Option
 
 class TableManager:
     def __init__(self):

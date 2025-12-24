@@ -2,8 +2,7 @@ import tkinter as tk
 from tkinter import *
 from tkinter import ttk
 from PIL import Image, ImageTk
-import networkx as nx
-from data.TableManager import TableManager
+from TableManager import TableManager
 from Character import Character
 from Stack import Stack
 from config import palette, sections
@@ -117,7 +116,7 @@ class Window:
         # Right side with scrollbar
         rightFrame = Frame(mainFrame, bg=self.palette["color3"])
         spacer = Frame(rightFrame)
-        rightCanvas = Canvas(spacer, bg=self.palette["color3"], highlightthickness=0)
+        rightCanvas = Canvas(spacer, highlightthickness=0)
         rightScrollbar = Scrollbar(spacer, orient="vertical", command=rightCanvas.yview)
         characterSheetFrame = Frame(rightCanvas)
         
@@ -271,7 +270,7 @@ class Window:
             dieButton = Button(master, bg=self.palette["background"], image=self.dice_images["d20"], command=lambda: self.handleDiceRoll(combobox, title, supplementalFrame), borderwidth=0, highlightthickness=0)            
             combobox.bind("<KeyRelease>", lambda event: self.handleComboboxSelection(combobox, title, supplementalFrame))
             combobox.grid(row=0, column=0, sticky="ew")
-            dieButton.grid(row=0, column=1, sticky="e")
+            dieButton.grid(row=0, column=1, sticky="w")
             supplementalFrame.grid(row=1, column=0, columnspan=2, sticky="nsew")
 
             
