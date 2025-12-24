@@ -72,6 +72,7 @@ class Character:
     def getAll(self):
         return {
             "Character Name": self.name,
+            "Level": self.level,
             "Race": self.race,
             "Racial Subtype": self.racial_subtype,
             "Class": self.class_,
@@ -80,7 +81,6 @@ class Character:
             "Background": self.background,
             "Background Reason": self.background_reason,
             "Alignment": self.alignment,
-            "Level": self.level,
             "Experience": self.experience,
             "Proficiency Bonus": self.proficiency_bonus,
             "Inspiration": self.inspiration,

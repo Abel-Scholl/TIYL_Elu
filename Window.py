@@ -110,28 +110,32 @@ class Window:
         mainFrame = Frame(self.root, bg=self.palette["background"])
         mainFrame.grid(row=0, column=0, sticky="nsew")
         
-        leftFrame = Frame(mainFrame, bg=self.palette["color4"])
+        leftFrame = Frame(mainFrame, bg=self.palette["color3"])
         leftFrame.pack(side="left", fill="both", expand=True)
 
         
         # Right side with scrollbar
-        rightCanvas = Canvas(mainFrame, bg=self.palette["color4"], highlightthickness=0)
-        rightScrollbar = Scrollbar(mainFrame, orient="vertical", command=rightCanvas.yview)
-        rightFrame = Frame(rightCanvas, bg=self.palette["color4"])
+        rightFrame = Frame(mainFrame, bg=self.palette["color3"])
+        spacer = Frame(rightFrame)
+        rightCanvas = Canvas(spacer, bg=self.palette["color3"], highlightthickness=0)
+        rightScrollbar = Scrollbar(spacer, orient="vertical", command=rightCanvas.yview)
+        characterSheetFrame = Frame(rightCanvas)
         
         # Pack canvas first (scrollbar will be packed on the right when needed)
-        rightCanvas.pack(side="left", fill="both", expand=True)
+        rightFrame.pack(fill="both", expand=True)
+        spacer.pack(side="bottom", fill="both", expand=True, pady=10, padx=20)
+        rightCanvas.pack(side="bottom", fill="both", expand=True, pady=20, padx=20)
         
-        rightCanvas.create_window((0, 0), window=rightFrame, anchor="nw")
+        rightCanvas.create_window((0, 0), window=characterSheetFrame, anchor="nw")
         # Initially disable scrollbar (will be enabled if content exceeds canvas)
         rightCanvas.configure(yscrollcommand=lambda *args: None)
         
-        rightFrame.bind("<Configure>", lambda event: configure_scroll(event, rightCanvas, rightScrollbar))
+        characterSheetFrame.bind("<Configure>", lambda event: configure_scroll(event, rightCanvas, rightScrollbar))
         rightCanvas.bind("<Configure>", lambda event: on_canvas_configure(event, rightCanvas, rightScrollbar))
         
         ##bind the mousewheel to the right canvas and the right frame
         rightCanvas.bind("<MouseWheel>", lambda event: _on_mousewheel(event, rightCanvas))
-        rightFrame.bind("<MouseWheel>", lambda event: _on_mousewheel(event, rightCanvas))
+        characterSheetFrame.bind("<MouseWheel>", lambda event: _on_mousewheel(event, rightCanvas))
         
         ##add the widgets to the current widgets dictionary
         widgets = {
@@ -139,6 +143,7 @@ class Window:
             "leftFrame": leftFrame,
             "rightCanvas": rightCanvas,
             "rightFrame": rightFrame,
+            "characterSheetFrame": characterSheetFrame,
             "rightScrollbar": rightScrollbar
         }
         self.currentWidgets.update(widgets)
@@ -191,12 +196,12 @@ class Window:
             self.root.destroy()
             
     def refreshCharacterSheet(self):
-        master = self.currentWidgets["rightFrame"]
+        master = self.currentWidgets["characterSheetFrame"]
         self.removeWidgets(master)
         traits = self.character.getAll()
-        i=0
+        i=1
         for trait, value in traits.items():
-            label = Label(master, text=f"{trait}: {value}", font=("Sitka Small", 16), bg=self.palette["color4"], fg=self.palette["color5"])
+            label = Label(master, text=f"{trait}: {value}", font=("Sitka Small", 16), fg=self.palette["color5"])
             label.grid(row=i, column=0, sticky="w")
             self.currentWidgets.update({f"{trait}": label})
             i+=1
@@ -246,6 +251,12 @@ class Window:
             entry = Entry(master, bg=self.palette["color6"], fg=self.palette["color5"], font=("Sitka Small", 12))
             entry.grid(row=1, column=0, sticky="ew")
             entry.bind("<KeyRelease>", lambda event: self.handleEntry(entry, title, master))
+        
+        elif title == "Level":
+            spinbox = Spinbox(master, from_=1, to=20, bg=self.palette["color6"], fg=self.palette["color5"], font=("Sitka Small", 12),
+                              command=lambda: self.handleSpinbox(spinbox, title, master))
+            spinbox.grid(row=1, column=0, sticky="ew")
+        
         else:
             table = self.tableManager.getTableByName(title) ##get the table object associated with the title
             if table is None:
@@ -297,6 +308,10 @@ class Window:
         self.character.set(title, value)
         self.refreshCharacterSheet()
     
+    def handleSpinbox(self, spinbox, title, master):
+        value = spinbox.get()
+        self.character.set(title, value)
+        self.refreshCharacterSheet()
     
     def style_notebook(self):
         # Use a theme that supports custom tab backgrounds (works better on Windows)
@@ -311,13 +326,13 @@ class Window:
 
         # Style the tab bar (the area behind the tabs)
         self.style.configure("TNotebook",
-                    background=palette["color4"],
+                    background=palette["color3"],
                     borderwidth=0,
                     bordercolor=palette["color5"])
 
         # Style the individual tabs
         self.style.configure("TNotebook.Tab", 
-                    background=palette["color3"],
+                    background=palette["color4"],
                     foreground=palette["color7"],
                     padding=[10, 5],
                     borderwidth=2,
@@ -327,7 +342,7 @@ class Window:
                     darkcolor=palette["color5"])
 
         self.style.map("TNotebook.Tab",
-                background=[("selected", palette["background"]), ("!selected", palette["color3"])],
+                background=[("selected", palette["background"]), ("!selected", palette["color4"])],
                 foreground=[("selected", palette["color6"]), ("!selected", palette["color7"])],
                 bordercolor=[("selected", palette["color5"]), ("!selected", palette["color5"])],
                 lightcolor=[("selected", palette["color5"]), ("!selected", palette["color5"])],
