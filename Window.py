@@ -229,7 +229,8 @@ class Window:
         
         headerFrame = Frame(mainFrame, bg=self.palette["background"])
         headerFrame.grid(row=0, column=0, sticky="nsew")
-        headerLabel = Label(headerFrame, text=title, font=(self.currentSectionHeadingFont, self.currentSectionHeadingFontSize), fg=self.palette["heading"], bg=self.palette["background"]) #Script MT Bold, Goudy Old Style, Sitka Small
+    
+        headerLabel = Label(headerFrame, text=title, font=(self.currentSectionHeadingFont, self.currentSectionHeadingFontSize), fg=self.palette["heading"], bg=self.palette["background"], wraplength=500, justify="left") #Script MT Bold, Goudy Old Style, Sitka Small
         headerLabel.grid(row=1, column=0, sticky="w")
         
         contentsFrame = Frame(mainFrame, bg=self.palette["background"])
@@ -285,6 +286,7 @@ class Window:
         value = first + val[1:]
         self.character.set(title, value)
         self.refreshCharacterSheet()
+    
         option = self.tableManager.getTableOptionByName(value) ##grab the option object associated with the value from the current table
         if option is not None:
             

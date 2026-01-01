@@ -1,9 +1,8 @@
 
 from Window import Window
-from mainView import MainView
-
 def main():
-    window = Window("TIYL_Elu", 1000, 600)
+    ##get the screen size of the primary monitor
+    window = Window("TIYL_Elu", 1200, 600)
     window.run()
 
 if __name__ == "__main__":
