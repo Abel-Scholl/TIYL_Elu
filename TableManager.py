@@ -2,6 +2,7 @@ from objects.Table import Table
 from data.races import races
 from data.classes import classes
 from objects.Option import Option
+from data.backgrounds import backgrounds
 
 class TableManager:
     def __init__(self):
@@ -9,6 +10,7 @@ class TableManager:
         
         self.initializeTable("Race")
         self.initializeTable("Class")
+        self.initializeTable("Background")
         
 
     def addTable(self, table):
@@ -113,7 +115,13 @@ class TableManager:
                     option = Option(reason, tableType, probability)
                     options.append(option)
                 name = f"{name} Class Reason"
-                
+            
+            case "Background":
+                die = "1d100"
+                probability = (1 / len(backgrounds))
+                for background in backgrounds:
+                    option = Option(background, tableType, probability, backgrounds[background]["description"])
+                    options.append(option)
             case _:
                 return None
         

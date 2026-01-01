@@ -38,6 +38,3 @@ class Table(ABC):
     
     def getModifier(self):
         return self.modifier
-    
-    def addOptions(self, options):
-        pass

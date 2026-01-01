@@ -1,6 +1,6 @@
 backgrounds = {
     "Acolyte": {
-        "description": "You have spent your life in the service of a temple to a specific god or pantheon of gods. You act as an intermediary between the realm of the holy and the mortal world, performing sacred rites and offering sacrifices in order to conduct worshipers into the presence of the divine. You are not necessarily a cleric—performing sacred rites is not the same thing as channeling divine power."
+        "description": "You have spent your life in the service of a temple to a specific god or pantheon of gods. You act as an intermediary between the realm of the holy and the mortal world, performing sacred rites and offering sacrifices in order to conduct worshipers into the presence of the divine. You are not necessarily a cleric—performing sacred rites is not the same thing as channeling divine power.",
         "skill proficiencies": ["Insight", "Religion"],
         "languages": ["choice", "choice"],
         "equipment": [
@@ -42,7 +42,7 @@ backgrounds = {
             "I seek to preserve a sacred text that my enemies consider heretical and seek to destroy",
             ],
         "flaws": [
-            "I judge others harshly, and myself even more severely.
+            "I judge others harshly, and myself even more severely.",
             "I put too much trust in those who wield power within my temple's hierarchy.",
             "My piety sometimes leads me to blindly trust those that profess faith in my god.",
             "I am inflexible in my thinking.",
@@ -60,25 +60,14 @@ backgrounds = {
     },
     
     "Charlatan": {
-        "description": """
-        You have always had a way with people. You know what makes them tick, you can tease out their 
-        hearts' desires after a few minutes of conversation, and with a few leading questions you can 
-        read them like they were children's books. It's a useful talent, and one that you're perfectly 
-        willing to use for your advantage.
-        You know what people want and you deliver, or rather, you promise to deliver. 
-        Common sense should steer people away from things that sound too good to be true, 
-        but common sense seems to be in short supply when you’re around. The bottle of pink-colored 
-        liquid will surely cure that unseemly rash, this ointment—nothing more than a bit of fat with 
-        a sprinkle of silver dust can restore youth and vigor, and there's a bridge in the city that just 
-        happens to be for sale. These marvels sound implausible, but you make them sound like the real deal."
-        """,
+        "description": "You have always had a way with people. You know what makes them tick, you can tease out their hearts' desires after a few minutes of conversation, and with a few leading questions you can read them like they were children's books. It's a useful talent, and one that you're perfectly willing to use for your advantage. You know what people want and you deliver, or rather, you promise to deliver. Common sense should steer people away from things that sound too good to be true, but common sense seems to be in short supply when you're around. The bottle of pink-colored liquid will surely cure that unseemly rash, this ointment—nothing more than a bit of fat with a sprinkle of silver dust can restore youth and vigor, and there's a bridge in the city that just happens to be for sale. These marvels sound implausible, but you make them sound like the real deal.",
         "skill proficiencies": ["Deception", "Sleight of Hand"],
         "tool proficiencies": ["Disguise kit", "Forgery kit"],
         "languages": ["choice", "choice"],
         "equipment": [
             "A set of fine clothes", 
             "A disguise kit", 
-            "Tools of the con of your choice (ten stoppered bottles filled with colored liquid, a set of weighted dice, a deck of marked cards, or a signet ring of an imaginary duke), 
+            "Tools of the con of your choice (ten stoppered bottles filled with colored liquid, a set of weighted dice, a deck of marked cards, or a signet ring of an imaginary duke)", 
             "A belt pouch containing 15 gp"
             ],
         "gp": 15,
@@ -102,7 +91,7 @@ backgrounds = {
             "Aspiration. I'm determined to make something of myself. (Any)",
             ],
         "bonds": [
-            "I fleeced the wrong person and must work to ensure that this individual never crosses paths with me or those I care about.
+            "I fleeced the wrong person and must work to ensure that this individual never crosses paths with me or those I care about.",
             "I owe everything to my mentor—a horrible person who's probably rotting in jail somewhere.",
             "Somewhere out there, I have a child who doesn't know me. I'm making the world better for him or her.",
             "I come from a noble family, and one day I'll reclaim my lands and title from those who stole them from me.",
@@ -128,13 +117,7 @@ backgrounds = {
     },
     
     "Criminal/Spy": {
-        "description": """
-        You are an experienced criminal with a history of breaking the law. 
-        You have spent a lot of time among other criminals and still have contacts 
-        within the criminal underworld. You’re far closer than most people to the world of 
-        murder, theft, and violence that pervades the underbelly of civilization, and you have 
-        survived up to this point by flouting the rules and regulations of society.
-        """,
+        "description": "You are an experienced criminal with a history of breaking the law. You have spent a lot of time among other criminals and still have contacts within the criminal underworld. You're far closer than most people to the world of murder, theft, and violence that pervades the underbelly of civilization, and you have survived up to this point by flouting the rules and regulations of society.",
         "skill proficiencies": [],
         "languages": ["choice", "choice"],
         "equipment": [],
@@ -155,9 +138,7 @@ backgrounds = {
     },
     
     "Entertainer": {
-        "description": """
-        You thrive in front of an audience. You know how to entrance them, entertain them, and even inspire them. Your poetics can stir the hearts of those who hear you, awakening grief or joy, laughter or anger. Your music raises their spirits or captures their sorrow. Your dance steps captivate, your humor cuts to the quick. Whatever techniques you use, your art is your life.
-        """,
+        "description": "You thrive in front of an audience. You know how to entrance them, entertain them, and even inspire them. Your poetics can stir the hearts of those who hear you, awakening grief or joy, laughter or anger. Your music raises their spirits or captures their sorrow. Your dance steps captivate, your humor cuts to the quick. Whatever techniques you use, your art is your life.",
         "skill proficiencies": [],
         "languages": ["choice", "choice"],
         "equipment": [],
@@ -178,18 +159,11 @@ backgrounds = {
     },
     
     "Folk Hero": {
-        "description": """
-        You come from a humble social rank, but you are destined for so much more. Already the people of your home village regard you as their champion, and your destiny calls you to stand against the tyrants and monsters that threaten the common folk everywhere.
-        """,
+        "description": "You come from a humble social rank, but you are destined for so much more. Already the people of your home village regard you as their champion, and your destiny calls you to stand against the tyrants and monsters that threaten the common folk everywhere.",
         "skill proficiencies": [],
         "languages": ["choice", "choice"],
         "equipment": [],
         "gp": 0,
-        "table_xxx": {
-            "name": "", 
-            "description": "", 
-            "options": []
-            }
         "feature": {"name": "", "description": "", "options": []},
         "personality traits": [],
         "ideals": [],
@@ -206,9 +180,7 @@ backgrounds = {
     },
     
     "Guild Artisan": {
-        "description": """
-        You are a member of an artisan’s guild, skilled in a particular field and closely associated with other artisans. You are a well-established part of the mercantile world, freed by talent and wealth from the constraints of a feudal social order. You learned your skills as an apprentice to a master artisan, under the sponsorship of your guild, until you became a master in your own right.
-        """,
+        "description": "You are a member of an artisan's guild, skilled in a particular field and closely associated with other artisans. You are a well-established part of the mercantile world, freed by talent and wealth from the constraints of a feudal social order. You learned your skills as an apprentice to a master artisan, under the sponsorship of your guild, until you became a master in your own right.",
         "skill proficiencies": [],
         "languages": ["choice", "choice"],
         "equipment": [],
@@ -265,7 +237,7 @@ backgrounds = {
             "I owe my guild a great debt for forging me into the person I am today.",
             "I pursue wealth to secure someone's love.",
             "One day I will return to my guild and prove that I am the greatest artisan of them all.",
-            "I will get revenge on the evil forces that destroyed my place of business and ruined my livelihood,
+            "I will get revenge on the evil forces that destroyed my place of business and ruined my livelihood.",
             ],
         "flaws": [
             "I'll do anything to get my hands on something rare or priceless.",
@@ -284,10 +256,9 @@ backgrounds = {
             "I learned the essentials of my craft from a mentor but had to join the guild to finish my training.",
         ]
     },
+    
     "Hermit": {
-        "description": """
-        You lived in seclusion—either in a sheltered community such as a monastery, or entirely alone—for a formative part of your life. In your time apart from the clamor of society, you found quiet, solitude, and perhaps some of the answers you were looking for.
-        """,
+        "description": "You lived in seclusion—either in a sheltered community such as a monastery, or entirely alone—for a formative part of your life. In your time apart from the clamor of society, you found quiet, solitude, and perhaps some of the answers you were looking for.",
         "skill proficiencies": [],
         "languages": ["choice", "choice"],
         "equipment": [],
@@ -308,9 +279,7 @@ backgrounds = {
     },
     
     "Noble": {
-       "description": """
-        You understand wealth, power, and privilege. You carry a noble title, and your family owns land, collects taxes, and wields significant political influence. You might be a pampered aristocrat unfamiliar with work or discomfort, a former merchant just elevated to the nobility, or a disinherited scoundrel with a disproportionate sense of entitlement. Or you could be an honest, hard-working landowner who cares deeply about the people who live and work on your land, keenly aware of your responsibility to them.
-        """,
+       "description": "You understand wealth, power, and privilege. You carry a noble title, and your family owns land, collects taxes, and wields significant political influence. You might be a pampered aristocrat unfamiliar with work or discomfort, a former merchant just elevated to the nobility, or a disinherited scoundrel with a disproportionate sense of entitlement. Or you could be an honest, hard-working landowner who cares deeply about the people who live and work on your land, keenly aware of your responsibility to them.",
         "skill proficiencies": [],
         "languages": ["choice", "choice"],
         "equipment": [],
@@ -331,9 +300,7 @@ backgrounds = {
     },
     
     "Outlander": {
-        "description": """
-        You grew up in the wilds, far from civilization and the comforts of town and technology. You've witnessed the migration of herds larger than forests, survived weather more extreme than any city-dweller could comprehend, and enjoyed the solitude of being the only thinking creature for miles in any direction. The wilds are in your blood, whether you were a nomad, an explorer, a recluse, a hunter-gatherer, or even a marauder. Even in places where you don’t know the specific features of the terrain, you know the ways of the wild.
-        """,
+        "description": "You grew up in the wilds, far from civilization and the comforts of town and technology. You've witnessed the migration of herds larger than forests, survived weather more extreme than any city-dweller could comprehend, and enjoyed the solitude of being the only thinking creature for miles in any direction. The wilds are in your blood, whether you were a nomad, an explorer, a recluse, a hunter-gatherer, or even a marauder. Even in places where you don’t know the specific features of the terrain, you know the ways of the wild.",
         "skill proficiencies": [],
         "languages": ["choice", "choice"],
         "equipment": [],
@@ -354,9 +321,7 @@ backgrounds = {
     },
     
     "Sage": {
-        "description": """
-        You spent years learning the lore of the multiverse. You scoured manuscripts, studied scrolls, and listened to the greatest experts on the subjects that interest you. Your efforts have made you a master in your fields of study.
-        """,
+        "description": "You spent years learning the lore of the multiverse. You scoured manuscripts, studied scrolls, and listened to the greatest experts on the subjects that interest you. Your efforts have made you a master in your fields of study.",
         "skill proficiencies": [],
         "languages": ["choice", "choice"],
         "equipment": [],
@@ -377,9 +342,7 @@ backgrounds = {
     },
     
     "Sailor": {
-        "description": """
-        You sailed on a seagoing vessel for years. In that time, you faced down mighty storms, monsters of the deep, and those who wanted to sink your craft to the bottomless depths. Your first love is the distant line of the horizon, but the time has come to try your hand at something new.
-        """,
+        "description": "You sailed on a seagoing vessel for years. In that time, you faced down mighty storms, monsters of the deep, and those who wanted to sink your craft to the bottomless depths. Your first love is the distant line of the horizon, but the time has come to try your hand at something new.",
         "skill proficiencies": ["Athletics", "Perception"],
         "tool proficiencies": ["Navigator's tools", "vehicles (water)"],
         "languages": ["choice", "choice"],
@@ -407,9 +370,7 @@ backgrounds = {
     },
     
     "Soldier": {
-        "description": """
-        War has been your life for as long as you care to remember. You trained as a youth, studied the use of weapons and armor, learned basic survival techniques, including how to stay alive on the battlefield. You might have been part of a standing national army or a mercenary company, or perhaps a member of a local militia who rose to prominence during a recent war.
-        """,
+        "description": "War has been your life for as long as you care to remember. You trained as a youth, studied the use of weapons and armor, learned basic survival techniques, including how to stay alive on the battlefield. You might have been part of a standing national army or a mercenary company, or perhaps a member of a local militia who rose to prominence during a recent war.",
         "skill proficiencies": [],
         "languages": ["choice", "choice"],
         "equipment": [],
@@ -429,10 +390,7 @@ backgrounds = {
         ]
     },
     "Urchin": {
-        "description": """
-        You grew up on the streets alone, orphaned, and poor. You had no one to watch over you or to provide for you, so you learned to provide for yourself. You fought fiercely over food and kept a constant watch out for other desperate souls who might steal from you. You slept on rooftops and in alleyways, exposed to the elements, and endured sickness without the advantage of medicine or a place to recuperate. You’ve survived despite all odds, and did so through cunning, strength, speed, or some combination of each.
-        You begin your adventuring career with enough money to live modestly but securely for at least ten days. How did you come by that money? What allowed you to break free of your desperate circumstances and embark on a better life?
-        """,
+        "description": "You grew up on the streets alone, orphaned, and poor. You had no one to watch over you or to provide for you, so you learned to provide for yourself. You fought fiercely over food and kept a constant watch out for other desperate souls who might steal from you. You slept on rooftops and in alleyways, exposed to the elements, and endured sickness without the advantage of medicine or a place to recuperate. You’ve survived despite all odds, and did so through cunning, strength, speed, or some combination of each. You begin your adventuring career with enough money to live modestly but securely for at least ten days. How did you come by that money? What allowed you to break free of your desperate circumstances and embark on a better life?",
         "skill proficiencies": ["Sleight of Hand", "Stealth"],
         "tool proficiencies": ["Disguise kit", "Thieves' Tools"],
         "languages": ["choice", "choice"],
@@ -444,12 +402,12 @@ backgrounds = {
         "bonds": [],
         "flaws": [],
         "reasons": [
-            "Wanderlust caused me to leave my family to see the world. I look after myself."
+            "Wanderlust caused me to leave my family to see the world. I look after myself.",
             "I ran away from a bad situation at home and made my own way in the world.",
             "Monsters wiped out my village, and I was the sole survivor. I had to find a way to survive.",
             "A notorious thief looked after me and other orphans, and we spied and stole to earn our keep.",
             "One day I woke up on the streets, alone and hungry, with no memory of my early childhood.",
             "My parents died, leaving no one to look after me. I raised myself.",
         ]
-    },
+    }
 }

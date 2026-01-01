@@ -1,6 +1,7 @@
 class Option:
-    def __init__(self, name, parentTable, probability=None):
+    def __init__(self, name, parentTable, probability=None, description=""):
         self.name = name
+        self.description = description
         self.probability = probability
         self.parentTable = parentTable
         self.suppTables = []
@@ -25,4 +26,7 @@ class Option:
     
     def removeSuppTable(self, table):
         self.suppTables.remove(table)
+        
+    def getDescription(self):
+        return self.description
     

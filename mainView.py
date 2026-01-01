@@ -88,7 +88,6 @@ def MainView(window):
     
     while not window.tableStack.isEmpty():
         section = window.tableStack.pop()
-        print(section)
         window.addSection(leftFrame, section)
     
     

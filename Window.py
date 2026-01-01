@@ -98,7 +98,6 @@ class Window:
             
             ##add the appropriate tables to the tab frame
             for section in sections[tab]:
-                print(section)
                 self.addSection(frame, section)
             
         notebook.pack(fill="both", expand=True, padx=5, pady=5)
@@ -271,7 +270,8 @@ class Window:
             combobox.bind("<KeyRelease>", lambda event: self.handleComboboxSelection(combobox, title, supplementalFrame))
             combobox.grid(row=0, column=0, sticky="ew")
             dieButton.grid(row=0, column=1, sticky="w")
-            supplementalFrame.grid(row=1, column=0, columnspan=2, sticky="nsew")
+            
+            supplementalFrame.grid(row=2, column=0, columnspan=2, sticky="nsew")
 
             
     def handleDiceRoll(self, combobox, table, master):
@@ -293,14 +293,28 @@ class Window:
             self.removeWidgets(master) ##refresh the sections
             master.grid_remove() ## Hide the frame entirely so it takes up no space
             
+            description = option.getDescription()
             tables = option.getSuppTables()
-            if len(tables) > 0:
+            if description or len(tables) > 0:
                 master.grid() ## Show the frame again since we have content
-                for table in tables:
-                    self.addSection(master, table.getName(), table=table)
+                if description:
+                    maxLength = 50
+                    fontSize=8
+                    descriptionLabel = Label(master, text=description, font=("Sitka Small", fontSize), fg=self.palette["color5"], 
+                            bg=self.palette["background"], justify="left", wraplength=400
+                   )
+                    descriptionLabel.grid(row=2, column=0, sticky="w")
+                if len(tables) > 0:
+                    for table in tables:
+                        self.addSection(master, table.getName(), table=table)
             else:
-                print(f"No table found for {value}")
+                master.grid_remove() ## Hide the frame entirely so it takes up no space
 
+    def handlePropogation(self, title):
+        ##ensure all subtables are cleared when the parent table is updated
+        
+        pass
+    
     def handleEntry(self, entry, title, master):
         ##every time the entry is changed, update the character sheet
         value = entry.get()
