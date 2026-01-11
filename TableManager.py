@@ -4,6 +4,13 @@ from data.classes import classes
 from objects.Option import Option
 from data.backgrounds import backgrounds
 from data.parents import parents
+from data.birthplaces import birthplaces
+from data.absentParent import absentParent
+from data.siblings import siblings, birthOrder
+from data.lifestyles import lifestyles
+from data.childhoodHome import childhoodHome
+from data.childhoodMemories import childhoodMemories
+from data.family import family
 
 class TableManager:
     def __init__(self):
@@ -13,7 +20,12 @@ class TableManager:
         self.initializeTable("Class")
         self.initializeTable("Background")
         self.initializeTable("Parents")
-        
+        self.initializeTable("Birthplace")
+        self.initializeTable("Siblings")
+        self.initializeTable("Family")
+        self.initializeTable("Family Lifestyle")
+        self.initializeTable("Childhood Home")
+        self.initializeTable("Childhood Memories")
 
     def addTable(self, table):
         self.tables.append(table)
@@ -131,6 +143,62 @@ class TableManager:
                     option = Option(option["name"], tableType, option["probability"])
                     options.append(option)
                 name = "Parents"
+                
+            case "Family":
+                die = "1d100"
+                for option in family["options"]:
+                    option = Option(option["name"], tableType, option["probability"])
+                    options.append(option)
+                name = "Family"
+                
+            case "Birthplace":
+                die = "1d100"
+                for option in birthplaces["options"]:
+                    option = Option(option["name"], tableType, option["probability"])
+                    options.append(option)
+                name = "Birthplace"
+                
+            case "Family Lifestyle":
+                die = "1d100"
+                for option in lifestyles["options"]:
+                    option = Option(option["name"], tableType, option["probability"])
+                    options.append(option)
+                name = "Family Lifestyle"
+                
+            case "Absent Parent":
+                die = "1d100"
+                for option in absentParent["options"]:
+                    option = Option(option["name"], tableType, option["probability"])
+                    options.append(option)
+                name = "Absent Parent"
+            
+            case "Childhood Home":
+                die = "1d100"
+                for option in childhoodHome["options"]:
+                    option = Option(option["name"], tableType, option["probability"])
+                    options.append(option)
+                name = "Childhood Home"
+                
+            case "Childhood Memories":
+                die = "1d100"
+                for option in childhoodMemories["options"]:
+                    option = Option(option["name"], tableType, option["probability"])
+                    options.append(option)
+                name = "Childhood Memories"
+                
+            case "Siblings":
+                die = "1d100"
+                for option in siblings["options"]:
+                    option = Option(option["name"], tableType, option["probability"])
+                    options.append(option)
+                name = "Siblings"
+                
+            case "Birth Order":
+                die = "1d100"
+                for option in birthOrder["options"]:
+                    option = Option(option["name"], tableType, option["probability"])
+                    options.append(option)
+                name = "Birth Order"
                 
             case _:
                 return None

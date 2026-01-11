@@ -13,9 +13,9 @@ palette = {
 
 sections = {
     "Base": ["Character Name", "Level", "Race", "Background", "Class"],
-    "Origins": ["Parents", "Birthplace", "Siblings", "Family", "Absent Parent", "Childhood Home", "Childhood Memories"],
+    "Origins": ["Parents", "Birthplace", "Siblings", "Family", "Family Lifestyle", "Childhood Home", "Childhood Memories"],
     "Bonds": [], ##This is where people close to you will go. If you have family/siblings, the tables to roll on for them will show up here.
-    "PersonalDecisions": ["Background", "Class"],
+    "PersonalDecisions": ["Background Reason", "Class Reason"],
     "LifeEvents": ["Life Events"],
     "Supplemental": []
 }

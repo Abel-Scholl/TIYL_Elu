@@ -286,7 +286,13 @@ class Window:
         value = first + val[1:]
         self.character.set(title, value)
         self.refreshCharacterSheet()
-    
+        
+        ##adjust the width of the combobox based on the length of the value
+        width = len(value)-5
+        if width < 20:
+            width = 20
+        combobox.configure(width=width)
+        
         option = self.tableManager.getTableOptionByName(value) ##grab the option object associated with the value from the current table
         if option is not None:
             
