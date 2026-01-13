@@ -145,7 +145,10 @@ class TableManager:
                 name = "Parents"
                 
             case "Family":
-                die = "1d100"
+                try:
+                    die = family["die"]
+                except KeyError:
+                    die = "1d100"
                 for option in family["options"]:
                     option = Option(option["name"], tableType, option["probability"])
                     options.append(option)
@@ -159,7 +162,10 @@ class TableManager:
                 name = "Birthplace"
                 
             case "Family Lifestyle":
-                die = "1d100"
+                try:
+                    die = lifestyles["die"]
+                except KeyError:
+                    die = "1d100"
                 for option in lifestyles["options"]:
                     option = Option(option["name"], tableType, option["probability"])
                     options.append(option)
